@@ -1,6 +1,16 @@
-var items = groceryItems;
-var editId = null;
+function getLocalStorage() {
+  var list = localStorage.getItem("grocery-list");
+  if (list) {
+    return JSON.parse(list);
+  }
+  return [];
+}
 
+function setLocalStorage(itemsArray) {
+  localStorage.setItem("grocery-list", JSON.stringify(itemsArray));
+}
+var items = getLocalStorage();
+var editId = null;
 // Render App
 function render() {
   var $app = $("#app");
@@ -29,6 +39,8 @@ function editCompleted(itemId) {
     }
     return item;
   });
+  // render();
+  setLocalStorage(items);
   render();
 }
 
@@ -37,10 +49,13 @@ function removeItem(itemId) {
   items = $.grep(items, function (item) {
     return item.id !== itemId;
   });
-  render();
+  // render();
   setTimeout(function () {
     alert("Item Deleted Successfully!");
   }, 0);
+
+  setLocalStorage(items);
+  render();
 }
 
 function generateId() {
@@ -54,10 +69,13 @@ function addItem(itemName) {
     id: generateId(),
   };
   items.push(newItem);
-  render();
+  // render();
   setTimeout(function () {
     alert("Item Added Successfully!");
   }, 0);
+
+  setLocalStorage(items);
+  render();
 }
 function updateItemName(newName) {
   items = $.map(items, function (item) {
@@ -67,10 +85,12 @@ function updateItemName(newName) {
     return item;
   });
   editId = null;
-  render();
+  // render();
   setTimeout(function () {
     alert("Item Updated Successfully!");
   }, 0);
+  setLocalStorage(items);
+  render();
 }
 function setEditId(itemId) {
   editId = itemId;
